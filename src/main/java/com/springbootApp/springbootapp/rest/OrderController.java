@@ -1,8 +1,12 @@
 package com.springbootApp.springbootapp.rest;
 
 
+import com.springbootApp.springbootapp.entity.FoodItem;
 import com.springbootApp.springbootapp.entity.Order;
+import com.springbootApp.springbootapp.entity.User;
+import com.springbootApp.springbootapp.services.FoodItemService;
 import com.springbootApp.springbootapp.services.OrderService;
+import com.springbootApp.springbootapp.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +19,18 @@ import java.util.NoSuchElementException;
 public class OrderController {
 
     private final OrderService orderService;
+    private final FoodItemService foodItemService;
+    private final UserService userService;
+//    public OrderController(OrderService orderService) {
+//        this.orderService = orderService;
+//    }
+public OrderController(OrderService orderService, FoodItemService foodItemService, UserService userService) {
+    this.orderService = orderService;
+    this.foodItemService = foodItemService;
+    this.userService = userService;
+}
 
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
+
 
     @GetMapping
     public List<Order> getAllOrders() {
@@ -35,11 +47,32 @@ public class OrderController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order createdOrder = orderService.createOrder(order);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
+//    @PostMapping
+//    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+//        Order createdOrder = orderService.createOrder(order);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
+//    }
+@PostMapping
+public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+    // Fetch the user and food items by their IDs
+    Long userId = order.getUser().getId();
+    User user = userService.getUserById(userId);
+
+    List<FoodItem> foodItems = order.getFoodItems();
+    for (FoodItem foodItem : foodItems) {
+        Long foodItemId = foodItem.getId();
+        FoodItem fetchedFoodItem = foodItemService.getFoodItemById(foodItemId);
+        foodItem.setName(fetchedFoodItem.getName());
     }
+
+    // Set the user and food item names in the order
+    order.getUser().setName(user.getName());
+    order.getFoodItems().forEach(foodItem -> foodItem.setName(foodItem.getName()));
+
+    // Create the order
+    Order createdOrder = orderService.createOrder(order);
+    return ResponseEntity.status(HttpStatus.CREATED).body(createdOrder);
+}
 
     @PutMapping("/{id}")
     public ResponseEntity<Order> updateOrder(@PathVariable("id") Long id, @RequestBody Order order) {

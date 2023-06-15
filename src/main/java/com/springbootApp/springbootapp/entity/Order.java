@@ -77,8 +77,8 @@ public class Order {
     private Long id;
 
     @ManyToOne
-    @JsonIgnore
-    @JsonBackReference
+   // @JsonIgnore
+   // @JsonBackReference
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -106,7 +106,7 @@ public class Order {
         this.id = id;
     }
 
-    @JsonIgnore // Ignore the user field when serializing to JSON
+ //   @JsonIgnore
     public User getUser() {
         return user;
     }

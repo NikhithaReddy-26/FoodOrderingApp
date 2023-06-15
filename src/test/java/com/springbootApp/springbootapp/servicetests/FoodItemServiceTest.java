@@ -1,11 +1,11 @@
 package com.springbootApp.springbootapp.servicetests;
 
-
-        import com.springbootApp.springbootapp.dao.FoodItemRepository;
+import com.springbootApp.springbootapp.dao.FoodItemRepository;
         import com.springbootApp.springbootapp.entity.FoodItem;
         import com.springbootApp.springbootapp.services.FoodItemService;
         import org.junit.jupiter.api.BeforeEach;
         import org.junit.jupiter.api.Test;
+        import org.mockito.InjectMocks;
         import org.mockito.Mock;
         import org.mockito.MockitoAnnotations;
 
@@ -14,8 +14,7 @@ package com.springbootApp.springbootapp.servicetests;
         import java.util.NoSuchElementException;
         import java.util.Optional;
 
-        import static org.junit.jupiter.api.Assertions.assertEquals;
-        import static org.junit.jupiter.api.Assertions.assertThrows;
+        import static org.junit.jupiter.api.Assertions.*;
         import static org.mockito.Mockito.*;
 
 class FoodItemServiceTest {
@@ -23,16 +22,16 @@ class FoodItemServiceTest {
     @Mock
     private FoodItemRepository foodItemRepository;
 
+    @InjectMocks
     private FoodItemService foodItemService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        foodItemService = new FoodItemService(foodItemRepository);
     }
 
     @Test
-    void testGetAllFoodItems() {
+    void getAllFoodItems_ReturnsListOfFoodItems() {
         // Arrange
         List<FoodItem> foodItems = new ArrayList<>();
         when(foodItemRepository.findAll()).thenReturn(foodItems);
@@ -46,7 +45,7 @@ class FoodItemServiceTest {
     }
 
     @Test
-    void testGetFoodItemById() {
+    void getFoodItemById_WithExistingId_ReturnsFoodItem() {
         // Arrange
         long foodItemId = 1L;
         FoodItem foodItem = new FoodItem();
@@ -61,18 +60,18 @@ class FoodItemServiceTest {
     }
 
     @Test
-    void testGetFoodItemByIdNotFound() {
+    void getFoodItemById_WithNonExistingId_ThrowsNoSuchElementException() {
         // Arrange
-        long foodItemId = 1L;
-        when(foodItemRepository.findById(foodItemId)).thenReturn(Optional.empty());
+        long nonExistingFoodItemId = 999L;
+        when(foodItemRepository.findById(nonExistingFoodItemId)).thenReturn(Optional.empty());
 
-        // Act & Assert
-        assertThrows(NoSuchElementException.class, () -> foodItemService.getFoodItemById(foodItemId));
-        verify(foodItemRepository, times(1)).findById(foodItemId);
+        // Act and Assert
+        assertThrows(NoSuchElementException.class, () -> foodItemService.getFoodItemById(nonExistingFoodItemId));
+        verify(foodItemRepository, times(1)).findById(nonExistingFoodItemId);
     }
 
     @Test
-    void testCreateFoodItem() {
+    void createFoodItem_ReturnsCreatedFoodItem() {
         // Arrange
         FoodItem foodItem = new FoodItem();
         when(foodItemRepository.save(foodItem)).thenReturn(foodItem);
@@ -86,22 +85,38 @@ class FoodItemServiceTest {
     }
 
     @Test
-    void testUpdateFoodItem() {
+    void updateFoodItem_WithExistingId_ReturnsUpdatedFoodItem() {
         // Arrange
         long foodItemId = 1L;
-        FoodItem foodItem = new FoodItem();
-        when(foodItemRepository.save(foodItem)).thenReturn(foodItem);
+        FoodItem existingFoodItem = new FoodItem();
+        FoodItem updatedFoodItem = new FoodItem();
+        when(foodItemRepository.findById(foodItemId)).thenReturn(Optional.of(existingFoodItem));
+        when(foodItemRepository.save(existingFoodItem)).thenReturn(updatedFoodItem);
 
         // Act
-        FoodItem result = foodItemService.updateFoodItem(foodItemId, foodItem);
+        FoodItem result = foodItemService.updateFoodItem(foodItemId, existingFoodItem);
 
         // Assert
-        assertEquals(foodItem, result);
-        verify(foodItemRepository, times(1)).save(foodItem);
+        assertEquals(updatedFoodItem, result);
+        verify(foodItemRepository, times(1)).findById(foodItemId);
+        verify(foodItemRepository, times(1)).save(existingFoodItem);
     }
 
     @Test
-    void testDeleteFoodItem() {
+    void updateFoodItem_WithNonExistingId_ThrowsNoSuchElementException() {
+        // Arrange
+        long nonExistingFoodItemId = 999L;
+        FoodItem foodItem = new FoodItem();
+        when(foodItemRepository.findById(nonExistingFoodItemId)).thenReturn(Optional.empty());
+
+        // Act and Assert
+        assertThrows(NoSuchElementException.class, () -> foodItemService.updateFoodItem(nonExistingFoodItemId, foodItem));
+        verify(foodItemRepository, times(1)).findById(nonExistingFoodItemId);
+        verify(foodItemRepository, never()).save(any(FoodItem.class));
+    }
+
+    @Test
+    void deleteFoodItem_DeletesFoodItem() {
         // Arrange
         long foodItemId = 1L;
 

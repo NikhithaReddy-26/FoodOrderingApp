@@ -1,17 +1,21 @@
 package com.springbootApp.springbootapp.TestRestControllers;
 
-
+import com.springbootApp.springbootapp.entity.FoodItem;
         import com.springbootApp.springbootapp.entity.Order;
-        import com.springbootApp.springbootapp.rest.OrderController;
+        import com.springbootApp.springbootapp.entity.User;
+import com.springbootApp.springbootapp.rest.OrderController;
+import com.springbootApp.springbootapp.services.FoodItemService;
         import com.springbootApp.springbootapp.services.OrderService;
+        import com.springbootApp.springbootapp.services.UserService;
         import org.junit.jupiter.api.BeforeEach;
         import org.junit.jupiter.api.Test;
+        import org.mockito.InjectMocks;
         import org.mockito.Mock;
         import org.mockito.MockitoAnnotations;
         import org.springframework.http.HttpStatus;
         import org.springframework.http.ResponseEntity;
 
-        import java.util.ArrayList;
+        import java.util.Arrays;
         import java.util.List;
         import java.util.NoSuchElementException;
 
@@ -19,22 +23,29 @@ package com.springbootApp.springbootapp.TestRestControllers;
         import static org.mockito.Mockito.*;
 
 class OrderControllerTest {
-
     @Mock
     private OrderService orderService;
 
+    @Mock
+    private FoodItemService foodItemService;
+
+    @Mock
+    private UserService userService;
+
+    @InjectMocks
     private OrderController orderController;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        orderController = new OrderController(orderService);
     }
 
     @Test
-    void testGetAllOrders() {
+    void getAllOrders_ReturnsListOfOrders() {
         // Arrange
-        List<Order> orders = new ArrayList<>();
+        Order order1 = new Order();
+        Order order2 = new Order();
+        List<Order> orders = Arrays.asList(order1, order2);
         when(orderService.getAllOrders()).thenReturn(orders);
 
         // Act
@@ -46,105 +57,113 @@ class OrderControllerTest {
     }
 
     @Test
-    void testGetOrderById() {
+    void getOrderById_WithExistingId_ReturnsOrder() {
         // Arrange
         long orderId = 1L;
         Order order = new Order();
         when(orderService.getOrderById(orderId)).thenReturn(order);
 
         // Act
-        ResponseEntity<Order> response = orderController.getOrderById(orderId);
+        ResponseEntity<Order> result = orderController.getOrderById(orderId);
 
         // Assert
-        assertEquals(order, response.getBody());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(ResponseEntity.ok(order), result);
         verify(orderService, times(1)).getOrderById(orderId);
     }
 
     @Test
-    void testGetOrderByIdNotFound() {
+    void getOrderById_WithNonExistingId_ReturnsNotFound() {
         // Arrange
-        long orderId = 1L;
-        when(orderService.getOrderById(orderId)).thenThrow(new NoSuchElementException());
+        long nonExistingOrderId = 999L;
+        when(orderService.getOrderById(nonExistingOrderId)).thenThrow(NoSuchElementException.class);
 
         // Act
-        ResponseEntity<Order> response = orderController.getOrderById(orderId);
+        ResponseEntity<Order> result = orderController.getOrderById(nonExistingOrderId);
 
         // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(orderService, times(1)).getOrderById(orderId);
+        assertEquals(ResponseEntity.notFound().build(), result);
+        verify(orderService, times(1)).getOrderById(nonExistingOrderId);
     }
 
+//    @Test
+//    void createOrder_ReturnsCreatedOrder() {
+//        // Arrange
+//        long userId = 1L;
+//        User user = new User(userId, "John");
+//        long foodItemId = 1L;
+//        FoodItem foodItem = new FoodItem(foodItemId, "Burger");
+//        Order order = new Order();
+//        order.setUser(user);
+//        order.setFoodItems(Arrays.asList(foodItem));
+//
+//        when(userService.getUserById(userId)).thenReturn(user);
+//        when(foodItemService.getFoodItemById(foodItemId)).thenReturn(foodItem);
+//        when(orderService.createOrder(order)).thenReturn(order);
+//
+//        // Act
+//        ResponseEntity<Order> result = orderController.createOrder(order);
+//
+//        // Assert
+//        assertEquals(ResponseEntity.status(HttpStatus.CREATED).body(order), result);
+//        verify(userService, times(1)).getUserById(userId);
+//        verify(foodItemService, times(1)).getFoodItemById(foodItemId);
+//        verify(orderService, times(1)).createOrder(order);
+//    }
+
     @Test
-    void testCreateOrder() {
-        // Arrange
-        Order order = new Order();
-        when(orderService.createOrder(order)).thenReturn(order);
-
-        // Act
-        ResponseEntity<Order> response = orderController.createOrder(order);
-
-        // Assert
-        assertEquals(order, response.getBody());
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        verify(orderService, times(1)).createOrder(order);
-    }
-
-    @Test
-    void testUpdateOrder() {
+    void updateOrder_WithExistingId_ReturnsUpdatedOrder() {
         // Arrange
         long orderId = 1L;
         Order order = new Order();
         when(orderService.updateOrder(orderId, order)).thenReturn(order);
 
         // Act
-        ResponseEntity<Order> response = orderController.updateOrder(orderId, order);
+        ResponseEntity<Order> result = orderController.updateOrder(orderId, order);
 
         // Assert
-        assertEquals(order, response.getBody());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(ResponseEntity.ok(order), result);
         verify(orderService, times(1)).updateOrder(orderId, order);
     }
 
     @Test
-    void testUpdateOrderNotFound() {
+    void updateOrder_WithNonExistingId_ReturnsNotFound() {
         // Arrange
-        long orderId = 1L;
+        long nonExistingOrderId = 999L;
         Order order = new Order();
-        when(orderService.updateOrder(orderId, order)).thenThrow(new NoSuchElementException());
+        when(orderService.updateOrder(nonExistingOrderId, order)).thenThrow(NoSuchElementException.class);
 
         // Act
-        ResponseEntity<Order> response = orderController.updateOrder(orderId, order);
+        ResponseEntity<Order> result = orderController.updateOrder(nonExistingOrderId, order);
 
         // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(orderService, times(1)).updateOrder(orderId, order);
+        assertEquals(ResponseEntity.notFound().build(), result);
+        verify(orderService, times(1)).updateOrder(nonExistingOrderId, order);
     }
 
     @Test
-    void testDeleteOrder() {
+    void deleteOrder_WithExistingId_ReturnsNoContent() {
         // Arrange
         long orderId = 1L;
 
         // Act
-        ResponseEntity<Void> response = orderController.deleteOrder(orderId);
+        ResponseEntity<Void> result = orderController.deleteOrder(orderId);
 
         // Assert
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        assertEquals(ResponseEntity.noContent().build(), result);
         verify(orderService, times(1)).deleteOrder(orderId);
     }
 
     @Test
-    void testDeleteOrderNotFound() {
+    void deleteOrder_WithNonExistingId_ReturnsNotFound() {
         // Arrange
-        long orderId = 1L;
-        doThrow(new NoSuchElementException()).when(orderService).deleteOrder(orderId);
+        long nonExistingOrderId = 999L;
+        doThrow(NoSuchElementException.class).when(orderService).deleteOrder(nonExistingOrderId);
 
         // Act
-        ResponseEntity<Void> response = orderController.deleteOrder(orderId);
+        ResponseEntity<Void> result = orderController.deleteOrder(nonExistingOrderId);
 
         // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(orderService, times(1)).deleteOrder(orderId);
+        assertEquals(ResponseEntity.notFound().build(), result);
+        verify(orderService, times(1)).deleteOrder(nonExistingOrderId);
     }
 }

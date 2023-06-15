@@ -51,6 +51,7 @@
 //}
 package com.springbootApp.springbootapp.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.ArrayList;
@@ -65,7 +66,8 @@ public class FoodItem {
     private Long id;
 
     @ManyToMany(mappedBy = "foodItems")
-    @JsonIgnore // Ignore the orders field when serializing to JSON
+  @JsonBackReference
+   // @JsonIgnore
     private List<Order> orders = new ArrayList<>();
 
     @Column(name = "name")
@@ -76,6 +78,10 @@ public class FoodItem {
 
     public FoodItem(String name) {
         this.name = name;
+    }
+
+    public FoodItem(long l, String s) {
+
     }
 
     public Long getId() {

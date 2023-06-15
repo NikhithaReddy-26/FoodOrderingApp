@@ -31,9 +31,16 @@ public class FoodItemService {
         return foodItemRepository.save(foodItem);
     }
 
-    public FoodItem updateFoodItem(Long id, FoodItem foodItem) {
-        return foodItemRepository.save(foodItem);
-    }
+  //  public FoodItem updateFoodItem(Long id, FoodItem foodItem) {
+//        return foodItemRepository.save(foodItem);
+//    }
+  public FoodItem updateFoodItem(Long id, FoodItem foodItem) {
+      FoodItem existingFoodItem = foodItemRepository.findById(id)
+              .orElseThrow(() -> new NoSuchElementException("Food item not found"));
+      existingFoodItem.setName(foodItem.getName());
+      return foodItemRepository.save(existingFoodItem);
+  }
+
 
     public void deleteFoodItem(Long id) {
         foodItemRepository.deleteById(id);

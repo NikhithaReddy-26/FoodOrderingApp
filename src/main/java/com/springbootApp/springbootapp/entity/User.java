@@ -14,10 +14,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "user")
-    @JsonIgnore
-    @JsonManagedReference
-    private List<Order> orders = new ArrayList<>();
+//    @OneToMany(mappedBy = "user")
+//    @JsonIgnore
+//    @JsonManagedReference
+//    private List<Order> orders = new ArrayList<>();
+@OneToMany(mappedBy = "user")
+//@JsonManagedReference
+@JsonIgnore
+private List<Order> orders = new ArrayList<>();
 
     @Column(name = "name")
     private String name;
@@ -27,6 +31,10 @@ public class User {
 
     public User(String name) {
         this.name = name;
+    }
+
+    public User(long userId, String john) {
+
     }
 
     public Long getId() {

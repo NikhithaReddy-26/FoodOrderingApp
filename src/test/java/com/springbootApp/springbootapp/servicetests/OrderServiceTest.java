@@ -1,12 +1,13 @@
 package com.springbootApp.springbootapp.servicetests;
 
-
-
-        import com.springbootApp.springbootapp.dao.OrderRepository;
+import com.springbootApp.springbootapp.dao.OrderRepository;
+        import com.springbootApp.springbootapp.entity.FoodItem;
         import com.springbootApp.springbootapp.entity.Order;
+        import com.springbootApp.springbootapp.entity.User;
         import com.springbootApp.springbootapp.services.OrderService;
         import org.junit.jupiter.api.BeforeEach;
         import org.junit.jupiter.api.Test;
+        import org.mockito.InjectMocks;
         import org.mockito.Mock;
         import org.mockito.MockitoAnnotations;
 
@@ -15,8 +16,7 @@ package com.springbootApp.springbootapp.servicetests;
         import java.util.NoSuchElementException;
         import java.util.Optional;
 
-        import static org.junit.jupiter.api.Assertions.assertEquals;
-        import static org.junit.jupiter.api.Assertions.assertThrows;
+        import static org.junit.jupiter.api.Assertions.*;
         import static org.mockito.Mockito.*;
 
 class OrderServiceTest {
@@ -24,16 +24,16 @@ class OrderServiceTest {
     @Mock
     private OrderRepository orderRepository;
 
+    @InjectMocks
     private OrderService orderService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        orderService = new OrderService(orderRepository);
     }
 
     @Test
-    void testGetAllOrders() {
+    void getAllOrders_ReturnsListOfOrders() {
         // Arrange
         List<Order> orders = new ArrayList<>();
         when(orderRepository.findAll()).thenReturn(orders);
@@ -47,7 +47,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void testGetOrderById() {
+    void getOrderById_WithExistingId_ReturnsOrder() {
         // Arrange
         long orderId = 1L;
         Order order = new Order();
@@ -62,20 +62,26 @@ class OrderServiceTest {
     }
 
     @Test
-    void testGetOrderByIdNotFound() {
+    void getOrderById_WithNonExistingId_ThrowsNoSuchElementException() {
         // Arrange
-        long orderId = 1L;
-        when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
+        long nonExistingOrderId = 999L;
+        when(orderRepository.findById(nonExistingOrderId)).thenReturn(Optional.empty());
 
-        // Act & Assert
-        assertThrows(NoSuchElementException.class, () -> orderService.getOrderById(orderId));
-        verify(orderRepository, times(1)).findById(orderId);
+        // Act and Assert
+        assertThrows(NoSuchElementException.class, () -> orderService.getOrderById(nonExistingOrderId));
+        verify(orderRepository, times(1)).findById(nonExistingOrderId);
     }
 
     @Test
-    void testCreateOrder() {
+    void createOrder_ReturnsCreatedOrder() {
         // Arrange
         Order order = new Order();
+        User user = new User();
+        List<FoodItem> foodItems = new ArrayList<>();
+
+        order.setUser(user);
+        order.setFoodItems(foodItems);
+
         when(orderRepository.save(order)).thenReturn(order);
 
         // Act
@@ -87,7 +93,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void testUpdateOrder() {
+    void updateOrder_ReturnsUpdatedOrder() {
         // Arrange
         long orderId = 1L;
         Order order = new Order();
@@ -102,7 +108,7 @@ class OrderServiceTest {
     }
 
     @Test
-    void testDeleteOrder() {
+    void deleteOrder_DeletesOrder() {
         // Arrange
         long orderId = 1L;
 

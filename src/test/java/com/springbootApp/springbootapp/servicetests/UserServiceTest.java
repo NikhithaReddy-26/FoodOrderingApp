@@ -1,11 +1,11 @@
 package com.springbootApp.springbootapp.servicetests;
 
-
-        import com.springbootApp.springbootapp.dao.UserRepository;
+import com.springbootApp.springbootapp.dao.UserRepository;
         import com.springbootApp.springbootapp.entity.User;
         import com.springbootApp.springbootapp.services.UserService;
         import org.junit.jupiter.api.BeforeEach;
         import org.junit.jupiter.api.Test;
+        import org.mockito.InjectMocks;
         import org.mockito.Mock;
         import org.mockito.MockitoAnnotations;
 
@@ -14,8 +14,7 @@ package com.springbootApp.springbootapp.servicetests;
         import java.util.NoSuchElementException;
         import java.util.Optional;
 
-        import static org.junit.jupiter.api.Assertions.assertEquals;
-        import static org.junit.jupiter.api.Assertions.assertThrows;
+        import static org.junit.jupiter.api.Assertions.*;
         import static org.mockito.Mockito.*;
 
 class UserServiceTest {
@@ -23,16 +22,16 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+    @InjectMocks
     private UserService userService;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserService(userRepository);
     }
 
     @Test
-    void testGetAllUsers() {
+    void getAllUsers_ReturnsListOfUsers() {
         // Arrange
         List<User> users = new ArrayList<>();
         when(userRepository.findAll()).thenReturn(users);
@@ -46,7 +45,7 @@ class UserServiceTest {
     }
 
     @Test
-    void testGetUserById() {
+    void getUserById_WithExistingId_ReturnsUser() {
         // Arrange
         long userId = 1L;
         User user = new User();
@@ -61,18 +60,18 @@ class UserServiceTest {
     }
 
     @Test
-    void testGetUserByIdNotFound() {
+    void getUserById_WithNonExistingId_ThrowsNoSuchElementException() {
         // Arrange
-        long userId = 1L;
-        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        long nonExistingUserId = 999L;
+        when(userRepository.findById(nonExistingUserId)).thenReturn(Optional.empty());
 
-        // Act & Assert
-        assertThrows(NoSuchElementException.class, () -> userService.getUserById(userId));
-        verify(userRepository, times(1)).findById(userId);
+        // Act and Assert
+        assertThrows(NoSuchElementException.class, () -> userService.getUserById(nonExistingUserId));
+        verify(userRepository, times(1)).findById(nonExistingUserId);
     }
 
     @Test
-    void testCreateUser() {
+    void createUser_ReturnsCreatedUser() {
         // Arrange
         User user = new User();
         when(userRepository.save(user)).thenReturn(user);
@@ -86,7 +85,7 @@ class UserServiceTest {
     }
 
     @Test
-    void testUpdateUser() {
+    void updateUser_ReturnsUpdatedUser() {
         // Arrange
         long userId = 1L;
         User user = new User();
@@ -101,7 +100,7 @@ class UserServiceTest {
     }
 
     @Test
-    void testDeleteUser() {
+    void deleteUser_DeletesUser() {
         // Arrange
         long userId = 1L;
 

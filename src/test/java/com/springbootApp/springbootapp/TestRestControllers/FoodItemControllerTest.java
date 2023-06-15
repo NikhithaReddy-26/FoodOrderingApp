@@ -4,14 +4,15 @@ package com.springbootApp.springbootapp.TestRestControllers;
 import com.springbootApp.springbootapp.entity.FoodItem;
 import com.springbootApp.springbootapp.rest.FoodItemController;
 import com.springbootApp.springbootapp.services.FoodItemService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
+        import org.junit.jupiter.api.BeforeEach;
+        import org.junit.jupiter.api.Test;
+        import org.mockito.InjectMocks;
+        import org.mockito.Mock;
         import org.mockito.MockitoAnnotations;
         import org.springframework.http.HttpStatus;
         import org.springframework.http.ResponseEntity;
 
-        import java.util.ArrayList;
+        import java.util.Arrays;
         import java.util.List;
         import java.util.NoSuchElementException;
 
@@ -19,22 +20,23 @@ import org.mockito.Mock;
         import static org.mockito.Mockito.*;
 
 class FoodItemControllerTest {
-
     @Mock
     private FoodItemService foodItemService;
 
+    @InjectMocks
     private FoodItemController foodItemController;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        foodItemController = new FoodItemController(foodItemService);
     }
 
     @Test
-    void testGetAllFoodItems() {
+    void getAllFoodItems_ReturnsListOfFoodItems() {
         // Arrange
-        List<FoodItem> foodItems = new ArrayList<>();
+        FoodItem foodItem1 = new FoodItem(1L, "Item 1");
+        FoodItem foodItem2 = new FoodItem(2L, "Item 2");
+        List<FoodItem> foodItems = Arrays.asList(foodItem1, foodItem2);
         when(foodItemService.getAllFoodItems()).thenReturn(foodItems);
 
         // Act
@@ -46,105 +48,104 @@ class FoodItemControllerTest {
     }
 
     @Test
-    void testGetFoodItemById() {
+    void getFoodItemById_WithExistingId_ReturnsFoodItem() {
         // Arrange
-        long foodItemId = 1L;
-        FoodItem foodItem = new FoodItem();
-        when(foodItemService.getFoodItemById(foodItemId)).thenReturn(foodItem);
+        long itemId = 1L;
+        FoodItem foodItem = new FoodItem(itemId, "Item 1");
+        when(foodItemService.getFoodItemById(itemId)).thenReturn(foodItem);
 
         // Act
-        ResponseEntity<FoodItem> response = foodItemController.getFoodItemById(foodItemId);
+        ResponseEntity<FoodItem> result = foodItemController.getFoodItemById(itemId);
 
         // Assert
-        assertEquals(foodItem, response.getBody());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(foodItemService, times(1)).getFoodItemById(foodItemId);
+        assertEquals(ResponseEntity.ok(foodItem), result);
+        verify(foodItemService, times(1)).getFoodItemById(itemId);
     }
 
     @Test
-    void testGetFoodItemByIdNotFound() {
+    void getFoodItemById_WithNonExistingId_ReturnsNotFound() {
         // Arrange
-        long foodItemId = 1L;
-        when(foodItemService.getFoodItemById(foodItemId)).thenThrow(new NoSuchElementException());
+        long nonExistingItemId = 999L;
+        when(foodItemService.getFoodItemById(nonExistingItemId)).thenThrow(NoSuchElementException.class);
 
         // Act
-        ResponseEntity<FoodItem> response = foodItemController.getFoodItemById(foodItemId);
+        ResponseEntity<FoodItem> result = foodItemController.getFoodItemById(nonExistingItemId);
 
         // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(foodItemService, times(1)).getFoodItemById(foodItemId);
+        assertEquals(ResponseEntity.notFound().build(), result);
+        verify(foodItemService, times(1)).getFoodItemById(nonExistingItemId);
     }
 
     @Test
-    void testCreateFoodItem() {
+    void createFoodItem_ReturnsCreatedFoodItem() {
         // Arrange
-        FoodItem foodItem = new FoodItem();
+        FoodItem foodItem = new FoodItem(1L, "New Item");
         when(foodItemService.createFoodItem(foodItem)).thenReturn(foodItem);
 
         // Act
-        ResponseEntity<FoodItem> response = foodItemController.createFoodItem(foodItem);
+        ResponseEntity<FoodItem> result = foodItemController.createFoodItem(foodItem);
 
         // Assert
-        assertEquals(foodItem, response.getBody());
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        assertEquals(ResponseEntity.status(HttpStatus.CREATED).body(foodItem), result);
         verify(foodItemService, times(1)).createFoodItem(foodItem);
     }
 
     @Test
-    void testUpdateFoodItem() {
+    void updateFoodItem_WithExistingId_ReturnsUpdatedFoodItem() {
         // Arrange
-        long foodItemId = 1L;
-        FoodItem foodItem = new FoodItem();
-        when(foodItemService.updateFoodItem(foodItemId, foodItem)).thenReturn(foodItem);
+        long itemId = 1L;
+        FoodItem existingFoodItem = new FoodItem(itemId, "Item 1");
+        FoodItem updatedFoodItem = new FoodItem(itemId, "Updated Item");
+        when(foodItemService.updateFoodItem(itemId, updatedFoodItem)).thenReturn(updatedFoodItem);
 
         // Act
-        ResponseEntity<FoodItem> response = foodItemController.updateFoodItem(foodItemId, foodItem);
+        ResponseEntity<FoodItem> result = foodItemController.updateFoodItem(itemId, updatedFoodItem);
 
         // Assert
-        assertEquals(foodItem, response.getBody());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(foodItemService, times(1)).updateFoodItem(foodItemId, foodItem);
+        assertEquals(ResponseEntity.ok(updatedFoodItem), result);
+        verify(foodItemService, times(1)).updateFoodItem(itemId, updatedFoodItem);
     }
 
     @Test
-    void testUpdateFoodItemNotFound() {
+    void updateFoodItem_WithNonExistingId_ReturnsNotFound() {
         // Arrange
-        long foodItemId = 1L;
-        FoodItem foodItem = new FoodItem();
-        when(foodItemService.updateFoodItem(foodItemId, foodItem)).thenThrow(new NoSuchElementException());
+        long nonExistingItemId = 999L;
+        FoodItem updatedFoodItem = new FoodItem(nonExistingItemId, "Updated Item");
+        when(foodItemService.updateFoodItem(nonExistingItemId, updatedFoodItem))
+                .thenThrow(NoSuchElementException.class);
 
         // Act
-        ResponseEntity<FoodItem> response = foodItemController.updateFoodItem(foodItemId, foodItem);
+        ResponseEntity<FoodItem> result = foodItemController.updateFoodItem(nonExistingItemId, updatedFoodItem);
 
         // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(foodItemService, times(1)).updateFoodItem(foodItemId, foodItem);
+        assertEquals(ResponseEntity.notFound().build(), result);
+        verify(foodItemService, times(1)).updateFoodItem(nonExistingItemId, updatedFoodItem);
     }
 
     @Test
-    void testDeleteFoodItem() {
+    void deleteFoodItem_WithExistingId_ReturnsNoContent() {
         // Arrange
-        long foodItemId = 1L;
+        long itemId = 1L;
 
         // Act
-        ResponseEntity<Void> response = foodItemController.deleteFoodItem(foodItemId);
+        ResponseEntity<Void> result = foodItemController.deleteFoodItem(itemId);
 
         // Assert
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        verify(foodItemService, times(1)).deleteFoodItem(foodItemId);
+        assertEquals(ResponseEntity.noContent().build(), result);
+        verify(foodItemService, times(1)).deleteFoodItem(itemId);
     }
 
     @Test
-    void testDeleteFoodItemNotFound() {
+    void deleteFoodItem_WithNonExistingId_ReturnsNotFound() {
         // Arrange
-        long foodItemId = 1L;
-        doThrow(new NoSuchElementException()).when(foodItemService).deleteFoodItem(foodItemId);
+        long nonExistingItemId = 999L;
+        doThrow(NoSuchElementException.class).when(foodItemService).deleteFoodItem(nonExistingItemId);
 
         // Act
-        ResponseEntity<Void> response = foodItemController.deleteFoodItem(foodItemId);
+        ResponseEntity<Void> result = foodItemController.deleteFoodItem(nonExistingItemId);
 
         // Assert
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        verify(foodItemService, times(1)).deleteFoodItem(foodItemId);
+        assertEquals(ResponseEntity.notFound().build(), result);
+        verify(foodItemService, times(1)).deleteFoodItem(nonExistingItemId);
     }
 }
