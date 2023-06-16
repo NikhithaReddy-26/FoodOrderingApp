@@ -10,9 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Entity
 @Table(name = "food_item")
 public class FoodItem {
@@ -29,4 +27,38 @@ public class FoodItem {
     @Column(name = "name")
     private String name;
 
+    public FoodItem() {
+    }
+
+    public FoodItem(String name) {
+        this.name = name;
+    }
+
+    public FoodItem(long l, String s) {
+
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
