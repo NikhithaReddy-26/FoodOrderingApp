@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
-//@Transactional
+
 public class UserService {
     private final UserRepository userRepository;
 

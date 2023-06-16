@@ -21,9 +21,7 @@ public class OrderController {
     private final OrderService orderService;
     private final FoodItemService foodItemService;
     private final UserService userService;
-//    public OrderController(OrderService orderService) {
-//        this.orderService = orderService;
-//    }
+
 public OrderController(OrderService orderService, FoodItemService foodItemService, UserService userService) {
     this.orderService = orderService;
     this.foodItemService = foodItemService;

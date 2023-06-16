@@ -2,9 +2,15 @@ package com.springbootapp.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
-
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "users")
 public class User {
@@ -13,50 +19,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @OneToMany(mappedBy = "user")
-//    @JsonIgnore
-//    @JsonManagedReference
-//    private List<Order> orders = new ArrayList<>();
+
 @OneToMany(mappedBy = "user")
-//@JsonManagedReference
+
 @JsonIgnore
 private List<Order> orders = new ArrayList<>();
 
     @Column(name = "name")
     private String name;
 
-    public User() {
-    }
 
-    public User(String name) {
-        this.name = name;
-    }
-
-    public User(long userId, String john) {
-
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

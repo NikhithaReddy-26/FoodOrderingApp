@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
-//@Transactional
+
 public class OrderService {
     private final OrderRepository orderRepository;
 
