@@ -1,39 +1,35 @@
-package com.springbootApp.springbootapp.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+package com.springbootapp.entity;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "food_item")
+public class FoodItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @OneToMany(mappedBy = "user")
-//    @JsonIgnore
-//    @JsonManagedReference
-//    private List<Order> orders = new ArrayList<>();
-@OneToMany(mappedBy = "user")
-//@JsonManagedReference
-@JsonIgnore
-private List<Order> orders = new ArrayList<>();
+    @ManyToMany(mappedBy = "foodItems")
+  @JsonBackReference
+   // @JsonIgnore
+    private List<Order> orders = new ArrayList<>();
 
     @Column(name = "name")
     private String name;
 
-    public User() {
+    public FoodItem() {
     }
 
-    public User(String name) {
+    public FoodItem(String name) {
         this.name = name;
     }
 
-    public User(long userId, String john) {
+    public FoodItem(long l, String s) {
 
     }
 

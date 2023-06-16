@@ -1,8 +1,8 @@
-package com.springbootApp.springbootapp.TestRestControllers;
+package com.springbootapp.testrestcontrollers;
 
-import com.springbootApp.springbootapp.entity.User;
-import com.springbootApp.springbootapp.rest.UserController;
-import com.springbootApp.springbootapp.services.UserService;
+import com.springbootapp.entity.User;
+import com.springbootapp.rest.UserController;
+import com.springbootapp.services.UserService;
         import org.junit.jupiter.api.BeforeEach;
         import org.junit.jupiter.api.Test;
         import org.mockito.InjectMocks;

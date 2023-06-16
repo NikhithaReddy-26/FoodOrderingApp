@@ -1,8 +1,8 @@
-package com.springbootApp.springbootapp.servicetests;
+package com.springbootapp.servicetests;
 
-import com.springbootApp.springbootapp.dao.FoodItemRepository;
-        import com.springbootApp.springbootapp.entity.FoodItem;
-        import com.springbootApp.springbootapp.services.FoodItemService;
+import com.springbootapp.dao.FoodItemRepository;
+        import com.springbootapp.entity.FoodItem;
+        import com.springbootapp.services.FoodItemService;
         import org.junit.jupiter.api.BeforeEach;
         import org.junit.jupiter.api.Test;
         import org.mockito.InjectMocks;

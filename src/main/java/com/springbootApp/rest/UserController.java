@@ -1,7 +1,7 @@
-package com.springbootApp.springbootapp.rest;
+package com.springbootapp.rest;
 
-import com.springbootApp.springbootapp.entity.User;
-import com.springbootApp.springbootapp.services.UserService;
+import com.springbootapp.entity.User;
+import com.springbootapp.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

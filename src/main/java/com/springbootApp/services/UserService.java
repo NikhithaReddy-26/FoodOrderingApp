@@ -1,8 +1,7 @@
-package com.springbootApp.springbootapp.services;
+package com.springbootapp.services;
 
-import com.springbootApp.springbootapp.dao.UserRepository;
-import com.springbootApp.springbootapp.entity.User;
-import jakarta.transaction.Transactional;
+import com.springbootapp.dao.UserRepository;
+import com.springbootapp.entity.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

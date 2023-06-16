@@ -1,19 +1,16 @@
-package com.springbootApp.springbootapp.TestRestControllers;
+package com.springbootapp.testrestcontrollers;
 
-import com.springbootApp.springbootapp.entity.FoodItem;
-        import com.springbootApp.springbootapp.entity.Order;
-        import com.springbootApp.springbootapp.entity.User;
-import com.springbootApp.springbootapp.rest.OrderController;
-import com.springbootApp.springbootapp.services.FoodItemService;
-        import com.springbootApp.springbootapp.services.OrderService;
-        import com.springbootApp.springbootapp.services.UserService;
+import com.springbootapp.entity.Order;
+import com.springbootapp.rest.OrderController;
+import com.springbootapp.services.FoodItemService;
+        import com.springbootapp.services.OrderService;
+        import com.springbootapp.services.UserService;
         import org.junit.jupiter.api.BeforeEach;
         import org.junit.jupiter.api.Test;
         import org.mockito.InjectMocks;
         import org.mockito.Mock;
         import org.mockito.MockitoAnnotations;
-        import org.springframework.http.HttpStatus;
-        import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity;
 
         import java.util.Arrays;
         import java.util.List;

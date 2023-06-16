@@ -1,9 +1,9 @@
-package com.springbootApp.springbootapp.TestRestControllers;
+package com.springbootapp.testrestcontrollers;
 
 
-import com.springbootApp.springbootapp.entity.FoodItem;
-import com.springbootApp.springbootapp.rest.FoodItemController;
-import com.springbootApp.springbootapp.services.FoodItemService;
+import com.springbootapp.entity.FoodItem;
+import com.springbootapp.rest.FoodItemController;
+import com.springbootapp.services.FoodItemService;
         import org.junit.jupiter.api.BeforeEach;
         import org.junit.jupiter.api.Test;
         import org.mockito.InjectMocks;

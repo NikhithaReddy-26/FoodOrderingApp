@@ -1,6 +1,6 @@
-package com.springbootApp.springbootapp.dao;
+package com.springbootapp.dao;
 
-import com.springbootApp.springbootapp.entity.FoodItem;
+import com.springbootapp.entity.FoodItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 

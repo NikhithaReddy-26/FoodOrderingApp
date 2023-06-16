@@ -1,8 +1,8 @@
-package com.springbootApp.springbootapp.servicetests;
+package com.springbootapp.servicetests;
 
-import com.springbootApp.springbootapp.dao.UserRepository;
-        import com.springbootApp.springbootapp.entity.User;
-        import com.springbootApp.springbootapp.services.UserService;
+import com.springbootapp.entity.User;
+import com.springbootapp.dao.UserRepository;
+import com.springbootapp.services.UserService;
         import org.junit.jupiter.api.BeforeEach;
         import org.junit.jupiter.api.Test;
         import org.mockito.InjectMocks;

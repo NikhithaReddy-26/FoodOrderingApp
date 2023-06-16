@@ -60,10 +60,8 @@
 //        this.foodItems = foodItems;
 //    }
 //}
-package com.springbootApp.springbootapp.entity;
+package com.springbootapp.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;

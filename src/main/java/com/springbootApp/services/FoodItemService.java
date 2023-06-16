@@ -1,8 +1,9 @@
-package com.springbootApp.springbootapp.services;
+package com.springbootapp.services;
 
 
-import com.springbootApp.springbootapp.dao.FoodItemRepository;
-import com.springbootApp.springbootapp.entity.FoodItem;
+
+import com.springbootapp.entity.FoodItem;
+import com.springbootapp.dao.FoodItemRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 

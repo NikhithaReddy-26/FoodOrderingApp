@@ -1,7 +1,8 @@
-package com.springbootApp.springbootapp.rest;
+package com.springbootapp.rest;
 
-import com.springbootApp.springbootapp.entity.FoodItem;
-import com.springbootApp.springbootapp.services.FoodItemService;
+
+import com.springbootapp.entity.FoodItem;
+import com.springbootapp.services.FoodItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
