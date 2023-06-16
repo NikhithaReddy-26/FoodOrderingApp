@@ -1,7 +1,6 @@
-package com.springbootapp.testrestcontrollers;
+package com.springbootapp.rest;
 
 import com.springbootapp.entity.Order;
-import com.springbootapp.rest.OrderController;
 import com.springbootapp.services.FoodItemService;
         import com.springbootapp.services.OrderService;
         import com.springbootapp.services.UserService;

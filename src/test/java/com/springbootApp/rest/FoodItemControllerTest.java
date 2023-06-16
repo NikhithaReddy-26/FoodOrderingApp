@@ -1,8 +1,7 @@
-package com.springbootapp.testrestcontrollers;
+package com.springbootapp.rest;
 
 
 import com.springbootapp.entity.FoodItem;
-import com.springbootapp.rest.FoodItemController;
 import com.springbootapp.services.FoodItemService;
         import org.junit.jupiter.api.BeforeEach;
         import org.junit.jupiter.api.Test;

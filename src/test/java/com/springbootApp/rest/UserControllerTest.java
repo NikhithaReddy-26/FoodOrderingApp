@@ -1,7 +1,6 @@
-package com.springbootapp.testrestcontrollers;
+package com.springbootapp.rest;
 
 import com.springbootapp.entity.User;
-import com.springbootapp.rest.UserController;
 import com.springbootapp.services.UserService;
         import org.junit.jupiter.api.BeforeEach;
         import org.junit.jupiter.api.Test;
